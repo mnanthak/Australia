@@ -1,5 +1,7 @@
 // TODO complete file header
 
+import java.util.NoSuchElementException;
+
 /**
  * This class tests the LoopStation class, and by extension, the Track class
  */
@@ -15,7 +17,17 @@ public class LoopStationTester {
    * @return true if createPod() is functioning correctly, false otherwise
    */
   public static boolean testCreatePod() {
-    return false;
+    LoopStation ls = new LoopStation();
+    Pod pod = ls.createPod(50, false);
+
+    // check if the pod instance's attributes are correct
+    if (pod.getCapacity() != 50)
+      return false;
+    if (pod.getPodClass() != Pod.ECONOMY)
+      return false;
+    if (ls.waitingEconomy.get(ls.waitingEconomy.size() - 1) != pod)
+      return false;
+    return true;
   }
   
   /**
@@ -29,7 +41,43 @@ public class LoopStationTester {
    * @return true if launchPod() is functioning correctly, false otherwise
    */
   public static boolean testLaunchPod() {
+
+    // check if launchPad() method throws the correct exception
+    LoopStation ls1 = new LoopStation();
+    try {
+      ls1.launchPod();
+      return false;
+    }
+    catch (NoSuchElementException n) {}
+    catch (Exception e) {
+      return false;
+    }
+
+    // check if first class pods are being launched properly
+    LoopStation ls2 = new LoopStation();
+    Pod podFirstClass1 = ls2.createPod(50, true);
+    Pod podFirstClass2 = ls2.createPod(50, true);
+    ls2.launchPod();
+    if (ls2.waitingFirst.get(0) != podFirstClass1)
+      return false;
+
+    // check if economy class pods are being launched properly
+    LoopStation ls3 = new LoopStation();
+    Pod podEconClass1 = ls3.createPod(50, false);
+    Pod podEconClass2 = ls3.createPod(50, false);
+    ls3.launchPod();
+    if (ls2.waitingEconomy.get(0) != podEconClass2)
     return false;
+    
+    // check if first class pods are being launched before economy class pods
+    LoopStation ls4 = new LoopStation();
+    Pod podFirstClass = ls4.createPod(50, true);
+    Pod podEconClass = ls4.createPod(50, flase);
+    ls4.launchPod();
+    if (ls4.waitingFirst.isEmpty() && !ls4.waitingEconomy.isEmpty())
+      return false;
+
+    return true;
   }
   
   /**
