@@ -11,7 +11,7 @@
 // 
 // Partner Name:    Harsh Singh
 // Partner Email:   hvsingh@wisc.edu
-// Partner Lecturer's Name: HObbes LeGault
+// Partner Lecturer's Name: Hobbes LeGault
 // 
 // VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
 //   _X_ Write-up states that pair programming is allowed for this assignment.
