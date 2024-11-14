@@ -141,23 +141,23 @@ public class LoopStation {
         // add the total number of passengers across all waiting first-class pods
         for (int i = 0; i < waitingFirst.size(); i++) {
             // if the current pod is functional, add its passenger number
-            if (waitingFirst.findFirstNonFunctional() == -1) {
+            try {
                 total += waitingFirst.get(i).getNumPassengers();
-            }
+            } catch (MalfunctioningPodException e) {}
         }
         // add the total number of passengers across all waiting economy-class pods
         for (int i = 0; i < waitingEconomy.size(); i++) {
             // if the current pod is functional, add its passenger number
-            if (waitingEconomy.findFirstNonFunctional() == -1) {
+            try {
                 total += waitingEconomy.get(i).getNumPassengers();
-            }
+            } catch (MalfunctioningPodException e) {}
         }
         // add the total number of passengers across all launched pods
         for (int i = 0; i < launched.size(); i++) {
             // if the current pod is functional, add its passenger number
-            if (launched.findFirstNonFunctional() == -1) {
+            try {
                 total += launched.get(i).getNumPassengers();
-            }
+            } catch (MalfunctioningPodException e) {}
         }
         return total;
     }
