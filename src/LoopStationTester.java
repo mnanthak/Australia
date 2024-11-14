@@ -58,7 +58,7 @@ public class LoopStationTester {
     Pod podFirstClass1 = ls2.createPod(50, true);
     Pod podFirstClass2 = ls2.createPod(50, true);
     ls2.launchPod();
-    if (ls2.waitingFirst.get(0) != podFirstClass1)
+    if (ls2.waitingFirst.get(0) != podFirstClass2)
       return false;
 
     // check if economy class pods are being launched properly
@@ -72,7 +72,7 @@ public class LoopStationTester {
     // check if first class pods are being launched before economy class pods
     LoopStation ls4 = new LoopStation();
     Pod podFirstClass = ls4.createPod(50, true);
-    Pod podEconClass = ls4.createPod(50, flase);
+    Pod podEconClass = ls4.createPod(50, false);
     ls4.launchPod();
     if (ls4.waitingFirst.isEmpty() && !ls4.waitingEconomy.isEmpty())
       return false;
