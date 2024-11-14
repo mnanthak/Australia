@@ -204,7 +204,10 @@ public class Pod {
     return Arrays.deepEquals(this.passengerList, p.passengerList) && 
         this.podClass == p.podClass && this.isFunctional == p.isFunctional;
   }
-
+  
+  /**
+   * Return a String representation of the contents of the Pod, and add an asterisk (*) on the end to indicate if the Pod nonfunctional
+   */
   @Override
   public String toString() {
     String ending = (isFunctional)? " " : "*"; 
