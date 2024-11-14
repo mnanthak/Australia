@@ -40,11 +40,16 @@ public class LoopStationTester {
     LoopStation ls = new LoopStation();
     Pod pod = ls.createPod(50, false);
 
-    // check if the pod instance's attributes are correct
-    if (pod.getCapacity() != 50)
+    // check if the Pod instance's attributes are correct, and make sure it doesn't throw an unnecessary exception
+    try {
+      if (pod.getCapacity() != 50)
+        return false;
+      if (pod.getPodClass() != Pod.ECONOMY)
+        return false;
+    } catch (MalfunctioningPodException e) {
+      // method should not be throwing an exception
       return false;
-    if (pod.getPodClass() != Pod.ECONOMY)
-      return false;
+    }
     if (ls.waitingEconomy.get(ls.waitingEconomy.size() - 1) != pod)
       return false;
     return true;
@@ -125,7 +130,26 @@ public class LoopStationTester {
     Pod pod2 = ls.createPod(50, false);
     Pod pod3 = ls.createPod(50, false);
 
-    return false;
+    pod2.setNonFunctional();
+    pod3.setNonFunctional();
+
+    // get number of Pods before the nonfunctional ones are cleared
+    int numBeforeClear = ls.getNumWaiting() + ls.getNumLaunched();
+    
+    ls.launchPod();
+    ls.launchPod();
+    
+    // clear the nonfunctional Pods and return the number that have been cleared
+    int numCleared = ls.clearMalfunctioning();
+    
+    // get number of Pods after the nonfunctional ones are cleared
+    int numAfterClear = ls.getNumWaiting() + ls.getNumLaunched();
+
+    // verify that the expected number of cleared nonfunctional Pods is equal to the actual result from the clear method
+    if (numCleared != numBeforeClear - numAfterClear)
+      return false;
+
+    return true;
   }
   
   /**
@@ -134,7 +158,49 @@ public class LoopStationTester {
    * @return true if the getNumXXX() methods are all functioning correctly, false otherwise
    */
   public static boolean testGetNums() {
-    return false;
+
+    // verify the behavior of getNumWaiting()
+    LoopStation ls1 = new LoopStation();
+    Pod getNumWaitingPod1 = ls1.createPod(50, false);
+    Pod getNumWaitingPod2 = ls1.createPod(50, true);
+    Pod getNumWaitingPod3 = ls1.createPod(50, false);
+    int expectedNumWaiting = 3;
+
+    if (ls1.getNumWaiting() != expectedNumWaiting)
+      return false;
+    
+    // verify the behavior of getNumLaunched()
+    LoopStation ls2 = new LoopStation();
+    Pod getNumWaitingLaunched1 = ls2.createPod(50, false);
+    Pod getNumWaitingLaunched2 = ls2.createPod(50, true);
+    Pod getNumWaitingLaunched3 = ls2.createPod(50, false);
+
+    ls2.launchPod();
+    ls2.launchPod();
+    int expectedNumLaunched = 2;
+
+    if (ls2.getNumLaunched() != expectedNumLaunched)
+      return false;
+    
+    // verify the behavior of getNumPassengers()
+    LoopStation ls3 = new LoopStation();
+    Pod getNumPassengersLaunched1 = ls3.createPod(50, false);
+    Pod getNumPassengersLaunched2 = ls3.createPod(50, true);
+    Pod getNumPassengersLaunched3 = ls3.createPod(50, false);
+
+    getNumPassengersLaunched1.setNonFunctional();
+    
+    ls3.waitingEconomy.addPassenger("Harry");
+    ls3.waitingEconomy.addPassenger("Tubby");
+    ls3.waitingFirst.addPassenger("Filmore");
+
+    int expectedNumPassengers = 2;
+
+    if (ls3.getNumPassengers() != expectedNumPassengers)
+      return false;
+
+    // if all above sub-tests pass, return true
+    return true;
   }
 
   public static void main(String[] args) {
