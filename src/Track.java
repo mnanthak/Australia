@@ -68,7 +68,29 @@ public class Track {
      * @return the lowest index of a non-functional Pod on the track, or -1 if all Pods are currently functioning (or the Track is currently empty)
      */
     public int findFirstNonFunctional() {
-
+        if (isEmpty()) {
+            return -1;
+        }
+        else {
+            LinkedNode lastNode = head;
+            int index = 0;
+            try {
+                // podClass is declared inside try-catch block because its declaration might throw an error
+                int podClass = lastNode.getNext().getPod().getPodClass();
+                
+                // for every node, if the corresponding Pod is nonfunctional, throw an error
+                while (lastNode.getNext() != null) {
+                        // if the node's corresponding Pod throws an error, when attempting to access its Pod-class, that means it is nonfunctional
+                        podClass = lastNode.getNext().getPod().getPodClass();
+                        index++;
+                        lastNode = lastNode.getNext();
+                }
+                // if an error is thrown, return the last index of the pod that was traversed through
+            } catch (MalfunctioningPodException e) {
+                    return index;
+            }
+        }
+        return -1;
     }
 
     /**
