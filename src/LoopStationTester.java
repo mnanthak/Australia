@@ -1,4 +1,24 @@
-// TODO complete file header
+//////////////// FILE HEADER //////////////////////////
+//
+// Title:    The Hyperloop program models the logistical software of Hyperloop pods, Hyperloop tracks, and Hyperloop stations
+// Course:   CS 300 Fall 2024
+//
+// Author:   Mohnish Nanthakumar
+// Email:    mnanthakumar@wisc.edu
+// Lecturer: Hobbes LeGault
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ///////////////////
+// 
+// Partner Name:    Harsh Singh
+// Partner Email:   hvsingh@wisc.edu
+// Partner Lecturer's Name: HObbes LeGault
+// 
+// VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
+//   _X_ Write-up states that pair programming is allowed for this assignment.
+//   _X_ We have both read and understand the course Pair Programming Policy.
+//   _X_ We have registered our team prior to the team registration deadline.
+//
+///////////////////////////////////////////////////////////////////////////////
 
 import java.util.NoSuchElementException;
 
@@ -100,6 +120,11 @@ public class LoopStationTester {
    * @return true if clearMalfunctioning() is functioning correctly, false otherwise
    */
   public static boolean testClearMalfunctioning() {
+    LoopStation ls = new LoopStation();
+    Pod pod1 = ls.createPod(50, false);
+    Pod pod2 = ls.createPod(50, false);
+    Pod pod3 = ls.createPod(50, false);
+
     return false;
   }
   
