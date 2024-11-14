@@ -53,7 +53,38 @@ public class Track {
      *         class, false if there were no seats or Pods available for their class
      */
     public boolean addPassenger(String name, boolean isFirstClass) {
-      
+
+        if (isEmpty())
+            return false;
+        if (isFirstClass) {
+            LinkedNode currentNode = tail;
+
+            // while the current node is not null, if the Pod corresponding to the current node is able to successfully add the specified passenger, return true
+            while (currentNode != null) {
+                try {
+                    currentNode.getPrev().getPod().addPassenger(name);
+                    return true;
+                } catch (MalfunctioningPodException e) {
+                    currentNode = currentNode.getPrev();
+                    continue;
+                }
+            }
+        }
+        else {
+            LinkedNode currentNode = head;
+
+            // while the current node is not null, if the Pod corresponding to the current node is able to successfully add the specified passenger, return true
+            while (currentNode != null) {
+                try {
+                    currentNode.getPod().addPassenger(name);
+                    return true;
+                } catch (MalfunctioningPodException e) {
+                    currentNode = currentNode.getNext();
+                    continue;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -64,7 +95,24 @@ public class Track {
      *         the Track is currently empty)
      */
     public int findPassenger(String name) {
-      
+        int index = 0;
+        LinkedNode currentNode = head;
+
+        // while the current node is not null, if the Pod corresponding to the current node contains the specified passenger, returns the Pod's index
+        while (currentNode != null) {
+            try {
+                if (currentNode.getPod().containsPassenger(name)) {
+                    return index;
+                }
+            } catch (MalfunctioningPodException e) {
+                currentNode = currentNode.getNext();
+                index++;
+                continue;
+            }
+            currentNode = currentNode.getNext();
+            index++;
+        }
+        return -1;
     }
 
     /**
@@ -77,18 +125,18 @@ public class Track {
             return -1;
         }
         else {
-            LinkedNode lastNode = head;
+            LinkedNode currentNode  = head;
             int index = 0;
             try {
                 // podClass is declared inside try-catch block because its declaration might throw an error
-                int podClass = lastNode.getNext().getPod().getPodClass();
+                int podClass = currentNode.getPod().getPodClass();
                 
                 // for every node, if the corresponding Pod is nonfunctional, throw an error
-                while (lastNode.getNext() != null) {
+                while (currentNode != null) {
                         // if the node's corresponding Pod throws an error, when attempting to access its Pod-class, that means it is nonfunctional
-                        podClass = lastNode.getNext().getPod().getPodClass();
+                        podClass = currentNode.getPod().getPodClass();
                         index++;
-                        lastNode = lastNode.getNext();
+                        currentNode  = currentNode .getNext();
                 }
                 // if an error is thrown, return the last index of the pod that was traversed through
             } catch (MalfunctioningPodException e) {
@@ -234,13 +282,33 @@ public class Track {
      * Removes a Pod at a given index from the track
      * Specified by: remove in interface ListADT<Pod>
      * 
-     * 
      * @param index - the index of the Pod to remove
      * @return a reference to the Pod removed from the track
      * @throws IndexOutOfBoundsException - if the given index is invalid
      */
     public Pod remove(int index) {
-      
+        // checking ahead of time if the specified index is invalid
+        if (index > size() - 1 || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid index!");
+        }
+
+        LinkedNode currentNode = head;
+        Pod pod;
+
+        int indexCounter = 0;
+        // when traversing through the nodes, if we reach the node/Pod to remove, remove it by reassigning nodal connections
+        while (currentNode != null) {
+            if (indexCounter == index) {
+                pod = currentNode.getPod();
+                currentNode.getPrev().setNext(currentNode.getNext());
+                currentNode.getNext().setPrev(currentNode.getPrev());
+                return pod;
+            }
+            indexCounter++; 
+        }
+
+        // if the Pod hasn't been found and removed, throw an error
+        throw new IndexOutOfBoundsException("Invalid index!");
     }
     
     /**
