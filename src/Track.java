@@ -25,7 +25,7 @@
 /**
  * This class models Track objects as a doubly-linked list for the CS300 Hyperloop project.
  */
-public class Track {
+public class Track implements ListADT<Pod> {
 
     /**
      * A reference to the node containing the first Pod on the track, may be null if the track is 
@@ -187,7 +187,9 @@ public class Track {
      * 
      * @param newElement - the Pod to add to this track
      */
+    @Override
     public void add(Pod newElement) {
+
       // Account for if pod isn't functional, won't add the pod through the try-catch block
       try {
         // Create node containing pod
@@ -232,6 +234,7 @@ public class Track {
      * @return a reference to the Pod at a given index in the track
      * @throws IndexOutOfBoundsException - if the given index is invalid
      */
+    @Override
     public Pod get(int index) {
       // Create list index variable to keep track of the list
       int listIndex = 0;
@@ -252,7 +255,7 @@ public class Track {
           // Increase list index by one
           listIndex++;
       }
-      throw new IndexOutOfBoundsException("Index is invalid");
+      throw new IndexOutOfBoundsException("Invalid index!");
     }
 
     /**
@@ -262,7 +265,11 @@ public class Track {
      * @param toFind - the Pod to search for in the track
      * @return true if the Pod is contained in the track, false otherwise
      */
-    public boolean contains(Pod toFind) {
+    @Override
+    public boolean contains(Pod o) {
+      
+      Pod toFind = (Pod) o;
+
       // Set current node as the head
       LinkedNode current = head;
       
@@ -286,6 +293,7 @@ public class Track {
      * @return a reference to the Pod removed from the track
      * @throws IndexOutOfBoundsException - if the given index is invalid
      */
+    @Override
     public Pod remove(int index) {
         // checking ahead of time if the specified index is invalid
         if (index > size() - 1 || index < 0) {
@@ -298,13 +306,28 @@ public class Track {
         int indexCounter = 0;
         // when traversing through the nodes, if we reach the node/Pod to remove, remove it by reassigning nodal connections
         while (currentNode != null) {
-            if (indexCounter == index) {
-                pod = currentNode.getPod();
-                currentNode.getPrev().setNext(currentNode.getNext());
-                currentNode.getNext().setPrev(currentNode.getPrev());
-                return pod;
+          LinkedNode prevNode = currentNode.getPrev();
+          LinkedNode nextNode = currentNode.getNext();
+          if (indexCounter == index) {
+            pod = currentNode.getPod();
+            if (prevNode == null) {
+              head = nextNode;
+              nextNode.setPrev(null);
+              return pod;
             }
-            indexCounter++; 
+            else if (nextNode == null) {
+              tail = prevNode;
+              prevNode.setNext(null);
+              return pod;
+            }
+            else {
+              prevNode.setNext(nextNode);
+              nextNode.setPrev(prevNode);
+              return pod;
+            }
+          }
+          currentNode = currentNode.getNext();
+          indexCounter++; 
         }
 
         // if the Pod hasn't been found and removed, throw an error
@@ -321,6 +344,7 @@ public class Track {
      *  
      * @return a String representation of all Pods currently on the track
      */
+    @Override
     public String toString() {
       // Create empty string
       String podInfo = "";

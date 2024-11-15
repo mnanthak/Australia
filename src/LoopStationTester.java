@@ -91,7 +91,7 @@ public class LoopStationTester {
     Pod podEconClass1 = ls3.createPod(50, false);
     Pod podEconClass2 = ls3.createPod(50, false);
     ls3.launchPod();
-    if (ls2.waitingEconomy.get(0) != podEconClass2)
+    if (ls3.waitingEconomy.get(0) != podEconClass2)
     return false;
     
     // check if first class pods are being launched before economy class pods
@@ -190,9 +190,9 @@ public class LoopStationTester {
 
     getNumPassengersLaunched1.setNonFunctional();
     
-    ls3.waitingEconomy.addPassenger("Harry");
-    ls3.waitingEconomy.addPassenger("Tubby");
-    ls3.waitingFirst.addPassenger("Filmore");
+    ls3.waitingEconomy.addPassenger("Harry", true);
+    ls3.waitingEconomy.addPassenger("Tubby", true);
+    ls3.waitingFirst.addPassenger("Filmore", false);
 
     int expectedNumPassengers = 2;
 
@@ -205,18 +205,18 @@ public class LoopStationTester {
 
   public static void main(String[] args) {
     boolean test1 = testCreatePod();
-    System.out.println("testCreatePod: "+(test1?"PASS":"fail"));
+    System.out.println("testCreatePod: "+(test1?"PASS":"FAIL"));
     
     boolean test2 = testLaunchPod();
-    System.out.println("testLaunchPod: "+(test2?"PASS":"fail"));
+    System.out.println("testLaunchPod: "+(test2?"PASS":"FAIL"));
     
     boolean test3 = testClearMalfunctioning();
-    System.out.println("testClearMalfunctioning: "+(test3?"PASS":"fail"));
+    System.out.println("testClearMalfunctioning: "+(test3?"PASS":"FAIL"));
     
     boolean test4 = testGetNums();
-    System.out.println("testGetNums: "+(test4?"PASS":"fail"));
+    System.out.println("testGetNums: "+(test4?"PASS":"FAIL"));
     
-    System.out.println("ALL TESTS: "+((test1&&test2&&test3&&test4)?"PASS":"fail"));
+    System.out.println("ALL TESTS: "+((test1&&test2&&test3&&test4)?"PASS":"FAIL"));
   }
 
 }

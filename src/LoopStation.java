@@ -50,7 +50,11 @@ public class LoopStation {
     /**
     * Creates a new LoopStation with empty tracks
     */
-    public LoopStation() {}
+    public LoopStation() {
+        launched = new Track();
+        waitingFirst = new Track();
+        waitingEconomy = new Track();
+    }
 
     /**
      * Creates a new Pod of the appropriate class and loads it onto the correct waiting track. This method also returns a reference to this newly-created Pod so that passengers may board
@@ -81,7 +85,7 @@ public class LoopStation {
      * 
      * @throws NoSuchElementException - if no Pods are waiting to launch
      */
-    public void launchPod() throws NoSuchElementException {
+    public void launchPod() {
         // if there are first-class pods waiting to launch, launch one
         if (waitingFirst.size() > 0) {
         launched.add(waitingFirst.get(waitingFirst.size() - 1));
